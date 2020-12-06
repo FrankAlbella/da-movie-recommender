@@ -428,103 +428,100 @@ std::vector <Movie*> bubbleSort(int loops, std::map<std::string, Movie*> moviesB
 
 int main()
 {
-    // Key: NAME_YEAR
-    std::map<std::string, Movie *> moviesByName;
+	// Key: NAME_YEAR
+	std::map<std::string, Movie*> moviesByName;
 
-    // Stores a ID:NAME pair, so we can have fast lookups by both names and ID
-    std::map<std::string, Movie *> moviesById;
+	// Stores a ID:NAME pair, so we can have fast lookups by both names and ID
+	std::map<std::string, Movie*> moviesById;
 
-    bool masterFileUsed = false;
+	bool masterFileUsed = false;
 
-    auto startTime = std::chrono::high_resolution_clock::now();
+	auto startTime = std::chrono::high_resolution_clock::now();
 
-    if (masterFileUsed = LoadMasterFile(moviesByName, moviesById))
-        goto finished_loading;
+	if (masterFileUsed = LoadMasterFile(moviesByName, moviesById))
+		goto finished_loading;
 
-    std::cout << "Loading database..." << std::endl;
-    if (!LoadMovieBasics(moviesByName, moviesById))
-    {
-        std::cout << "Missing file: " << TITLE_BASICS << std::endl;
-        return 1;
-    }
+	std::cout << "Loading database..." << std::endl;
+	if (!LoadMovieBasics(moviesByName, moviesById))
+	{
+		std::cout << "Missing file: " << TITLE_BASICS << std::endl;
+		return 1;
+	}
 
-    std::cout << "Loading ratings..." << std::endl;
-    if (!LoadRatings(moviesById))
-    {
-        std::cout << "Missing file: " << TITLE_RATINGS << std::endl;
-        return 1;
-    }
+	std::cout << "Loading ratings..." << std::endl;
+	if (!LoadRatings(moviesById))
+	{
+		std::cout << "Missing file: " << TITLE_RATINGS << std::endl;
+		return 1;
+	}
 
-    std::cout << "Loading cast..." << std::endl;
-    if (!LoadCastIds(moviesById))
-    {
-        std::cout << "Missing file: " << TITLE_PRINCIPALS << std::endl;
-        return 1;
-    }
+	std::cout << "Loading cast..." << std::endl;
+	if (!LoadCastIds(moviesById))
+	{
+		std::cout << "Missing file: " << TITLE_PRINCIPALS << std::endl;
+		return 1;
+	}
 
-    std::cout << "Processing names..." << std::endl;
-    if (!LoadCastNames(moviesById))
-    {
-        std::cout << "Missing file: " << NAME_BASICS << std::endl;
-        return 1;
-    }
+	std::cout << "Processing names..." << std::endl;
+	if (!LoadCastNames(moviesById))
+	{
+		std::cout << "Missing file: " << NAME_BASICS << std::endl;
+		return 1;
+	}
 
-    std::cout << "Loading languages..." << std::endl;
-    if (!LoadLanguages(moviesById))
-    {
-        std::cout << "Missing file: " << TITLE_AKAS << std::endl;
-        return 1;
-    }
+	std::cout << "Loading languages..." << std::endl;
+	if (!LoadLanguages(moviesById))
+	{
+		std::cout << "Missing file: " << TITLE_AKAS << std::endl;
+		return 1;
+	}
 
 finished_loading:
-    auto stopTime = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stopTime - startTime);
-    std::cout << "Time elasped: " << duration.count() << "ms" << std::endl;
+	auto stopTime = std::chrono::high_resolution_clock::now();
+	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stopTime - startTime);
+	std::cout << "Time elasped: " << duration.count() << "ms" << std::endl;
 
-    if (!masterFileUsed)
-    {
-        std::cout << "A master file can be created for faster loading times" << std::endl;
-        std::cout << "Would you like to create a master file? (y/n): ";
+	if (!masterFileUsed)
+	{
+		std::cout << "A master file can be created for faster loading times" << std::endl;
+		std::cout << "Would you like to create a master file? (y/n): ";
 
-        std::string answer; 
+		std::string answer;
 
-        std::cin >> answer;
+		std::cin >> answer;
 
-        if((unsigned char)std::tolower(answer[0]) == 'y')
-        {
-            std::cout << "Saving to master file..." << std::endl;
-            MoviesToTsv(moviesById);
-        }
-        
-    }
+		if ((unsigned char)std::tolower(answer[0]) == 'y')
+		{
+			std::cout << "Saving to master file..." << std::endl;
+			MoviesToTsv(moviesById);
+		}
 
-    std::string title;
-    std::string year;
+	}
 
-    std::cout << "Enter a Movie Name: ";
-    getline(std::cin, title);
-    std::cout << "Enter the year published (type UNKNOWN if the movie has no known date): ";
-    std::cin >> year;
+	std::string title;
+	std::string year;
 
-    std::string key = title + "_" + year;
-    if (moviesByName.count(key) == 0)
-    {
-        std::cout << "Movie not found!" << std::endl;
-        return 2;
-    }
+	std::cout << "Enter a Movie Name: ";
+	getline(std::cin, title);
+	std::cout << "Enter the year published (type UNKNOWN if the movie has no known date): ";
+	std::cin >> year;
 
-    moviesByName[key]->print();
-    std::string imdbId = moviesByName[key]->movieId;
+	std::string key = title + "_" + year;
+	if (moviesByName.count(key) == 0)
+	{
+		std::cout << "Movie not found!" << std::endl;
+		return 2;
+	}
 
-    
-    
-    
-    //A bubble sort thingy needs testing after score
-    auto sorted = bubbleSort(3, moviesByName);
-    for (int i = 0; i < sorted.size(); i++)
-    {
-        std::cout << sorted[i] << std::endl;
-    }
+	Movie* selectedMovie = moviesByName[key];
 
-    return 0;
+	selectedMovie->print();
+	std::string imdbId = selectedMovie->movieId;
+
+	//remove percentile
+
+
+
+
+	return 0;
 }
