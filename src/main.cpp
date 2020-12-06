@@ -352,6 +352,80 @@ bool LoadMasterFile(std::map<std::string, Movie *> &moviesByName, std::map<std::
     return true;
 }
 
+std::vector <Movie*> bubbleSort(int loops, std::map<std::string, Movie*> moviesByName) //Cut down to only correct number of values
+{
+    int score = 0;
+    int count = loops;
+
+    std::vector<Movie*> sorted;
+
+    if (count == -1)
+    {
+        count = moviesByName.size();
+    }
+
+    for (auto it = moviesByName.begin(); it != moviesByName.end(); it++)
+    {
+        sorted.push_back(it->second);
+    }
+
+    int index = 0;
+    for (int i = 0; i < count; i++)
+    {
+        for (int x = 0; x < sorted.size(); x++)
+        {
+            if (sorted[index]->score < sorted[i]->score)
+            {
+                index = i;
+            }
+        }
+
+        Movie *temp = sorted[i];
+        sorted[i] = sorted[index];
+        sorted[index] = temp;
+    }
+
+    return sorted; 
+}   
+
+//std::vector <Movie*> heapifyDown(int* theHeap, int index, int size)
+//{
+//    int leftChild = 2 * index + 1;
+//    int rightChild = 2 * index + 2;
+//    int biggest = index;
+//
+//    if (leftChild < size && theHeap[leftChild] > theHeap[biggest])
+//    {
+//        biggest = leftChild;
+//    }
+//
+//    if (rightChild < size && theHeap[rightChild] > theHeap[biggest])
+//    {
+//        biggest = rightChild;
+//    }
+//
+//    if (biggest != index)
+//    {
+//        int temp = theHeap[index];
+//        theHeap[index] = theHeap[biggest];
+//        theHeap[biggest] = temp;
+//
+//        heapifyDown(theHeap, biggest, size);
+//    }
+//}
+//
+//std::vector <Movie*> heapSort(int values, std::map<std::string, Movie*> moviesByName)
+//{
+//    std::vector <Movie*> sorted;
+//
+//    for (auto it = moviesByName.begin(); it != moviesByName.end(); it++)
+//    {
+//        sorted.push_back(it->second);
+//    }
+//
+//    sorted = heapifyDown(*sorted, 0, sorted.size());
+//}
+
 int main()
 {
     // Key: NAME_YEAR
@@ -441,6 +515,16 @@ finished_loading:
 
     moviesByName[key]->print();
     std::string imdbId = moviesByName[key]->movieId;
+
+    
+    
+    
+    //A bubble sort thingy needs testing after score
+    auto sorted = bubbleSort(3, moviesByName);
+    for (int i = 0; i < sorted.size(); i++)
+    {
+        std::cout << sorted[i] << std::endl;
+    }
 
     return 0;
 }
