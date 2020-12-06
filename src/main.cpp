@@ -426,6 +426,47 @@ std::vector <Movie*> bubbleSort(int loops, std::map<std::string, Movie*> moviesB
 //    sorted = heapifyDown(*sorted, 0, sorted.size());
 //}
 
+void scoreMovies(std::map<std::string, Movie*> movies, Movie* selectedMovie)
+{
+	float k_r = 1;
+	float k_y = -0.25;
+	float k_g = 1;
+	float k_a = 1.5;
+	float k_w = 1;
+	float k_d = 2;
+
+
+	//goes through map of movies, and scores them based on input movie
+	for (auto it = movies.begin(); it != movies.end(); it++) 
+	{
+		Movie* thisMovie = it->second;
+
+		float ratingScore = (thisMovie->avgRating);
+		float yearScore = abs(stof(selectedMovie->year) - std::stof(thisMovie->year));
+		float genreScore = 0;
+		float actorScore = 1;
+		float writerScore = 1;
+		float directorScore = 1;
+		
+		for (auto it = thisMovie->genres.begin(); it != thisMovie->genres.end(); it++) {
+			genreScore += selectedMovie->genres.count(*it); 
+		}
+		for (auto it = thisMovie->actorIds.begin(); it != thisMovie->actorIds.end(); it++) {
+			actorScore += selectedMovie->actorIds.count(*it);
+		}
+		for (auto it = thisMovie->writerIds.begin(); it != thisMovie->writerIds.end(); it++) {
+			writerScore += selectedMovie->writerIds.count(*it);
+		}
+		for (auto it = thisMovie->directorIds.begin(); it != thisMovie->directorIds.end(); it++) {
+			directorScore += selectedMovie->directorIds.count(*it);
+		}
+
+		float thisRecomendationScore = pow(ratingScore, k_r) * pow(yearScore, k_y) * pow(genreScore, k_g) * pow(actorScore, k_a) * pow(writerScore, k_w) * pow(directorScore, k_d);
+		
+		thisMovie->score = thisRecomendationScore;
+	}
+}
+
 int main()
 {
 	// Key: NAME_YEAR
@@ -520,7 +561,14 @@ finished_loading:
 
 	//remove percentile
 
+    scoreMovies(moviesByName, selectedMovie);
 
+    //A bubble sort thingy needs testing after score
+    auto sorted = bubbleSort(3, moviesByName);
+    for (int i = 0; i < sorted.size(); i++)
+    {
+        std::cout << sorted[i]->score << std::endl;
+    }
 
 
 	return 0;
