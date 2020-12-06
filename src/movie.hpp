@@ -24,10 +24,10 @@ public:
     std::set<std::string> directorIds;
     std::set<std::string> actorIds;
     std::set<std::string> writerIds;
-    int score = -1; 
+    float score = -1; 
 
     std::vector<Movie> getRecommendations(std::map<std::string, Movie> movies) const;
-    void scoreMovies(std::map<std::string, Movie> movies) const;
+    void scoreMovies(std::map<std::string, Movie> movies, Movie* selectedMovie) const;
     void print() const;
     // Returns the ID used as the key to this movie in an std::map
     std::string getID() const;
