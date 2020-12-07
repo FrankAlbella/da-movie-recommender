@@ -372,11 +372,11 @@ std::vector <Movie*> bubbleSort(int loops, std::map<std::string, Movie*> moviesB
     int index = 0;
     for (int i = 0; i < count; i++)
     {
-        for (int x = 0; x < sorted.size(); x++)
+        for (int x = i; x < sorted.size(); x++)
         {
-            if (sorted[index]->score < sorted[i]->score)
+            if (sorted[index]->score < sorted[x]->score)
             {
-                index = i;
+                index = x;
             }
         }
 
@@ -442,7 +442,7 @@ void scoreMovies(std::map<std::string, Movie*> movies, Movie* selectedMovie)
 		Movie* thisMovie = it->second;
 
 		float ratingScore = (thisMovie->avgRating);
-		float yearScore = abs(stof(selectedMovie->year) - std::stof(thisMovie->year));
+		float yearScore = abs(stof(selectedMovie->year) - std::stof(thisMovie->year)) + 1;
 		float genreScore = 0;
 		float actorScore = 1;
 		float writerScore = 1;
@@ -564,10 +564,10 @@ finished_loading:
     scoreMovies(moviesByName, selectedMovie);
 
     //A bubble sort thingy needs testing after score
-    auto sorted = bubbleSort(3, moviesByName);
-    for (int i = 0; i < sorted.size(); i++)
+    auto sorted = bubbleSort(10, moviesByName);
+    for (int i = 0; i < 10; i++)
     {
-        std::cout << sorted[i]->score << std::endl;
+        std::cout << sorted[i]->name << " " << sorted[i]->score << std::endl;
     }
 
 
