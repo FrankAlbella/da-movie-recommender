@@ -1,0 +1,9 @@
+.vscode/
+bin/
+obj/
+datasets/
+x64/
+Debug/
+P3 Movies.vcxproj
+P3 Movies.vcxproj.filters
+P3 Movies.vcxproj.user
