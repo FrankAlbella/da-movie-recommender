@@ -4,7 +4,8 @@
 #include <map>
 #include <string>
 #include <chrono>
-
+#include <algorithm>
+#include <locale>
 #include "movie.hpp"
 
 const std::string TITLE_AKAS = "datasets/title.akas.tsv";
@@ -352,7 +353,7 @@ bool LoadMasterFile(std::map<std::string, Movie *> &moviesByName, std::map<std::
     return true;
 }
 
-std::vector <Movie*> selectionSort(int loops, std::map<std::string, Movie*> moviesByName) //Cut down to only correct number of values
+std::vector <Movie*> selectionSort(int loops, std::map<std::string, Movie*> &moviesByName) //Cut down to only correct number of values
 {
     int score = 0;
     int count = loops;
@@ -384,7 +385,6 @@ std::vector <Movie*> selectionSort(int loops, std::map<std::string, Movie*> movi
         sorted[i] = sorted[index];
         sorted[index] = temp;
     }
-
     return sorted; 
 }   
 
@@ -414,7 +414,7 @@ void heapifyDown(std::vector<Movie*> &theHeap, int index, int size)
     }
 }
 
-std::vector <Movie*> heapSort(int loops, std::map<std::string, Movie*> moviesByName)
+std::vector <Movie*> heapSort(int loops, std::map<std::string, Movie*> &moviesByName)
 {
     std::vector <Movie*> sorted;
     std::vector <Movie*> output;
@@ -439,6 +439,63 @@ std::vector <Movie*> heapSort(int loops, std::map<std::string, Movie*> moviesByN
     }
 
     return output;
+}
+
+std::vector< std::pair<int, Movie*>> suggestAlt(std::string title, std::map<std::string, Movie*>& movies)
+{
+    std::vector< std::pair<int, Movie*>> suggestions;
+
+    for (auto it = movies.begin(); it != movies.end(); it++)
+    {
+        if (it->second->name.find(title) != std::string::npos)
+        {
+            suggestions.push_back(std::make_pair(it->second->ratings, it->second));
+        }
+    }
+    return suggestions;
+}
+
+Movie* findMovie(std::string title, std::string year, std::map<std::string, Movie*> &movies) //Todo account for a null search result
+{
+    std::string key = title + "_" + year;
+
+    auto it = movies.find(key);
+
+    Movie* output = NULL;
+
+    if (it != movies.end())
+    {
+        output = it->second;
+    }
+
+    else
+    {
+        std::cout << "Movie: " << title << " not found!" << std::endl << std::endl;
+        std::vector< std::pair<int, Movie*>> suggestions = suggestAlt(title, movies);
+        sort(suggestions.begin(), suggestions.end(), std::greater <std::pair<int, Movie*>>());
+
+        if (suggestions.size() > 0)
+        {
+            std::cout << "Did you mean?" << std::endl;
+
+            for (int i = 0; i < 100; i++)
+            {
+                std::cout << i + 1 << ". " << "\"" << suggestions[i].second->name << "\", "<< suggestions[i].second->year << std::endl;
+            }
+
+            int x;
+            std::cout << "Pick an option: ";
+            std::cin >> x;
+            output = suggestions[x - 1].second;
+        }
+
+        else
+        {
+            std::cout << "No results" << std::endl;
+        }
+    }
+
+    return output; 
 }
 
 void scoreMovies(std::map<std::string, Movie*> movies, Movie* selectedMovie)
@@ -562,14 +619,15 @@ finished_loading:
 	std::cout << "Enter the year published (type UNKNOWN if the movie has no known date): ";
 	std::cin >> year;
 
-	std::string key = title + "_" + year;
-	if (moviesByName.count(key) == 0)
-	{
-		std::cout << "Movie not found!" << std::endl;
-		return 2;
-	}
+    //Not needed with after search suggestion function
+	//std::string key = title + "_" + year; 
+	//if (moviesByName.count(key) == 0)
+	//{
+	//	std::cout << "Movie not found!" << std::endl;
+	//	return 2;
+	//}
 
-	Movie* selectedMovie = moviesByName[key];
+	Movie* selectedMovie = findMovie(title, year, moviesByName);
 
 	selectedMovie->print();
 	std::string imdbId = selectedMovie->movieId;
@@ -595,6 +653,7 @@ finished_loading:
     }
 
     
+    //TEST CHANGE TO GITHUB COMMI
 
 	return 0;
 }
