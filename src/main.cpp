@@ -478,7 +478,7 @@ Movie* findMovie(std::string title, std::string year, std::map<std::string, Movi
         {
             std::cout << "Did you mean?" << std::endl;
 
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 10; i++)
             {
                 std::cout << i + 1 << ". " << "\"" << suggestions[i].second->name << "\", "<< suggestions[i].second->year << std::endl;
             }
