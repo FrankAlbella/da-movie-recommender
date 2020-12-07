@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <locale>
 #include "movie.hpp"
+#include <math.h>
 
 const std::string TITLE_AKAS = "datasets/title.akas.tsv";
 const std::string TITLE_BASICS = "datasets/title.basics.tsv";
