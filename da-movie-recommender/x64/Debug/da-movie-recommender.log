@@ -1,0 +1,6 @@
+﻿  main.cpp
+C:\Users\jaime\source\repos\da-movie-recommender\src\main.cpp(365,36): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\jaime\source\repos\da-movie-recommender\src\main.cpp(428,5): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\jaime\source\repos\da-movie-recommender\src\main.cpp(430,45): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\jaime\source\repos\da-movie-recommender\src\main.cpp(438,45): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  da-movie-recommender.vcxproj -> C:\Users\jaime\source\repos\da-movie-recommender\x64\Debug\da-movie-recommender.exe
