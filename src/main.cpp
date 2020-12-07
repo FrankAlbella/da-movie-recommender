@@ -352,7 +352,7 @@ bool LoadMasterFile(std::map<std::string, Movie *> &moviesByName, std::map<std::
     return true;
 }
 
-std::vector <Movie*> bubbleSort(int loops, std::map<std::string, Movie*> moviesByName) //Cut down to only correct number of values
+std::vector <Movie*> selectionSort(int loops, std::map<std::string, Movie*> moviesByName) //Cut down to only correct number of values
 {
     int score = 0;
     int count = loops;
@@ -388,43 +388,58 @@ std::vector <Movie*> bubbleSort(int loops, std::map<std::string, Movie*> moviesB
     return sorted; 
 }   
 
-//std::vector <Movie*> heapifyDown(int* theHeap, int index, int size)
-//{
-//    int leftChild = 2 * index + 1;
-//    int rightChild = 2 * index + 2;
-//    int biggest = index;
-//
-//    if (leftChild < size && theHeap[leftChild] > theHeap[biggest])
-//    {
-//        biggest = leftChild;
-//    }
-//
-//    if (rightChild < size && theHeap[rightChild] > theHeap[biggest])
-//    {
-//        biggest = rightChild;
-//    }
-//
-//    if (biggest != index)
-//    {
-//        int temp = theHeap[index];
-//        theHeap[index] = theHeap[biggest];
-//        theHeap[biggest] = temp;
-//
-//        heapifyDown(theHeap, biggest, size);
-//    }
-//}
-//
-//std::vector <Movie*> heapSort(int values, std::map<std::string, Movie*> moviesByName)
-//{
-//    std::vector <Movie*> sorted;
-//
-//    for (auto it = moviesByName.begin(); it != moviesByName.end(); it++)
-//    {
-//        sorted.push_back(it->second);
-//    }
-//
-//    sorted = heapifyDown(*sorted, 0, sorted.size());
-//}
+void heapifyDown(std::vector<Movie*> &theHeap, int index, int size)
+{
+    int leftChild = 2 * index + 1;
+    int rightChild = 2 * index + 2;
+    int biggest = index;
+
+    if (leftChild < size && theHeap[leftChild]->score > theHeap[biggest]->score)
+    {
+        biggest = leftChild;
+    }
+
+    if (rightChild < size && theHeap[rightChild]->score > theHeap[biggest]->score)
+    {
+        biggest = rightChild;
+    }
+
+    if (biggest != index)
+    {
+        Movie* temp = theHeap[index];
+        theHeap[index] = theHeap[biggest];
+        theHeap[biggest] = temp;
+
+        heapifyDown(theHeap, biggest, size);
+    }
+}
+
+std::vector <Movie*> heapSort(int loops, std::map<std::string, Movie*> moviesByName)
+{
+    std::vector <Movie*> sorted;
+    std::vector <Movie*> output;
+
+
+    for (auto it = moviesByName.begin(); it != moviesByName.end(); it++)
+    {
+        sorted.push_back(it->second);
+    }
+
+    for (int i = sorted.size() / 2 - 1; 0 <= i; i--)
+    {
+        heapifyDown(sorted, i, sorted.size());
+    }
+
+    for (int i = 0; i < loops; i++)
+    {
+        output.push_back(sorted[0]);
+        sorted[0] = sorted[sorted.size() - 1];
+        sorted.resize(sorted.size() - 1);
+        heapifyDown(sorted, 0, sorted.size());
+    }
+
+    return output;
+}
 
 void scoreMovies(std::map<std::string, Movie*> movies, Movie* selectedMovie)
 {
@@ -563,13 +578,23 @@ finished_loading:
 
     scoreMovies(moviesByName, selectedMovie);
 
-    //A bubble sort thingy needs testing after score
-    auto sorted = bubbleSort(10, moviesByName);
+    std::cout << "Top 10 Recommendations; selection sort" << std::endl;
+    auto bsorted = selectionSort(10, moviesByName);
     for (int i = 0; i < 10; i++)
     {
-        std::cout << sorted[i]->name << " " << sorted[i]->score << std::endl;
+        std::cout << bsorted[i]->name << " " << bsorted [i]->score << std::endl;
     }
 
+    std::cout << std::endl;
+
+    std::cout << "Top 10 Recommendations; heapsort sort" << std::endl;
+    auto hsorted = heapSort(10, moviesByName);
+    for (int i = 0; i < 10; i++)
+    {
+        std::cout << hsorted[i]->name << " " << hsorted[i]->score << std::endl;
+    }
+
+    
 
 	return 0;
 }
