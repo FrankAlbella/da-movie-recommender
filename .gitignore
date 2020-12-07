@@ -2,3 +2,6 @@
 bin/
 obj/
 datasets/
+da-movie-recommender/
+x64/
+.vs/
