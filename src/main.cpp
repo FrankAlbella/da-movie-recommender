@@ -524,9 +524,9 @@ void scoreMovies(std::map<std::string, Movie*> movies, Movie* selectedMovie)
 	{
 		Movie* thisMovie = it->second;
 
-		float ratingsScore = 1 - abs((thisMovie->ratings - selectedMovie->ratings)) / (thisMovie->ratings - selectedMovie->ratings + 1);
+		float ratingsScore = 1 - abs((float(thisMovie->ratings) - float(selectedMovie->ratings))) / (float(thisMovie->ratings) + float(selectedMovie->ratings) + float(1));
 		float ratingScore = (thisMovie->avgRating);
-		float yearScore = abs(stof(selectedMovie->year) - std::stof(thisMovie->year));
+		float yearScore = abs(stof(selectedMovie->year) - stof(thisMovie->year)) + 1;
 		float genreScore = 0;
 		float actorScore = 1;
 		float writerScore = 1;
