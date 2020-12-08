@@ -19,6 +19,7 @@ void Movie::print() const
     std::cout << '\t' << "Notable Writers: " << setToString(this->writers) << std::endl;
     std::cout << '\t' << "Average Rating: " << this->avgRating << std::endl;
     std::cout << '\t' << "Number of Ratings: " << this->ratings << std::endl;
+	std::cout << std::endl;
 }
 
 std::string Movie::setToString(const std::set<std::string>& set) const

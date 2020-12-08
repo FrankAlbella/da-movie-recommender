@@ -361,10 +361,15 @@ std::vector <Movie*> selectionSort(int loops, std::map<std::string, Movie*> &mov
 
     std::vector<Movie*> sorted;
 
-    if (count == -1)
+    if (count > moviesByName.size() or count < 0)
     {
         count = moviesByName.size();
     }
+	else
+	{
+		count = count + 1;
+	}
+
 
     for (auto it = moviesByName.begin(); it != moviesByName.end(); it++)
     {
@@ -624,49 +629,60 @@ finished_loading:
 
 	}
 
-	std::string title;
-	std::string year;
+	while (true)
+	{
+		std::string title;
+		std::string year;
 
-	std::cout << "Enter a Movie Name: ";
-	getline(std::cin, title);
-	std::cout << "Enter the year published (type UNKNOWN if the movie has no known date): ";
-	std::cin >> year;
+		std::cout << "Enter a Movie Name: ";
+		getline(std::cin, title);
+		std::cout << "Enter the year published (type UNKNOWN if the movie has no known date): ";
+		getline(std::cin, year);
 
-    //Not needed with after search suggestion function
-	//std::string key = title + "_" + year; 
-	//if (moviesByName.count(key) == 0)
-	//{
-	//	std::cout << "Movie not found!" << std::endl;
-	//	return 2;
-	//}
+		//Not needed with after search suggestion function
+		//std::string key = title + "_" + year; 
+		//if (moviesByName.count(key) == 0)
+		//{
+		//	std::cout << "Movie not found!" << std::endl;
+		//	return 2;
+		//}
 
-	Movie* selectedMovie = findMovie(title, year, moviesByName);
+		Movie* selectedMovie = findMovie(title, year, moviesByName);
 
-	selectedMovie->print();
-	std::string imdbId = selectedMovie->movieId;
+		selectedMovie->print();
 
-	//remove percentile
+		std::string imdbId = selectedMovie->movieId;
 
-    scoreMovies(moviesByName, selectedMovie);
+		scoreMovies(moviesByName, selectedMovie);
 
-    std::cout << "Top 10 Recommendations; selection sort" << std::endl;
-    auto bsorted = selectionSort(10, moviesByName);
-    for (int i = 0; i < 10; i++)
-    {
-        std::cout << bsorted[i]->name << " " << bsorted [i]->score << std::endl;
-    }
+		std::cout << "Top 10 Recommendations; selection sort" << std::endl;
+		auto bsorted = selectionSort(10, moviesByName);
+		int bshift = 0;
+		if (bsorted[0]->name == selectedMovie->name) {
+			bshift = 1;
+		}
+		for (int i = 0 + bshift; i < 10 + bshift; i++)
+		{
+			std::cout << bsorted[i]->name << " " << bsorted[i]->score << std::endl;
+		}
 
-    std::cout << std::endl;
+		std::cout << std::endl;
 
-    std::cout << "Top 10 Recommendations; heapsort sort" << std::endl;
-    auto hsorted = heapSort(10, moviesByName);
-    for (int i = 0; i < 10; i++)
-    {
-        std::cout << hsorted[i]->name << " " << hsorted[i]->score << std::endl;
-    }
+		std::cout << "Top 10 Recommendations; heapsort sort" << std::endl;
+		auto hsorted = heapSort(10+1, moviesByName);
+		int hshift = 0;
+		if (hsorted[0]->name == selectedMovie->name) {
+			hshift = 1;
+		}
+		for (int i = 0 + hshift; i < 10 + hshift; i++)
+		{
+			std::cout << hsorted[i]->name << " " << hsorted[i]->score << std::endl;
+		}
+		title = "";
+		year = "";
 
-    
-    //TEST CHANGE TO GITHUB COMMI
+		std::cout << std::endl;
+	}
 
 	return 0;
 }
