@@ -20,7 +20,6 @@ public:
     std::set<std::string> directors;
     std::set<std::string> actors;
     std::set<std::string> writers;
-
     std::set<std::string> directorIds;
     std::set<std::string> actorIds;
     std::set<std::string> writerIds;
