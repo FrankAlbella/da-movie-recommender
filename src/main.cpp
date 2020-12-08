@@ -460,18 +460,18 @@ Movie *findMovie(std::string title, std::string year, std::map<std::string, Movi
         loops = suggestions.size();
 
     for (int i = 0; i < loops; i++)
-        std::cout << i + 1 << ". "
+        std::cout << i + 1 << ") "
                   << "\"" << suggestions[i]->name << "\", " << suggestions[i]->year << std::endl;
 
     int choice = -1;
 
-    while (choice < 0 || choice > suggestions.size())
+    while (choice < 0 || choice > 10 || choice > suggestions.size())
     {
         std::cout << "Pick an option: ";
         std::cin >> choice;
         std::cin.get();
 
-        if (choice < 0 || choice > suggestions.size())
+        if (choice < 0 || choice > 10 || choice > suggestions.size())
             std::cout << "Invalid choice, please try again." << std::endl;
     }
 
@@ -586,8 +586,7 @@ finished_loading:
         std::cout << "Would you like to create a master file? (y/n): ";
 
         std::string answer;
-
-        std::cin >> answer;
+        getline(std::cin, answer);
 
         if ((unsigned char)std::tolower(answer[0]) == 'y')
         {
@@ -693,8 +692,7 @@ finished_loading:
         std::cout << "Would you search another movie? (y/n): ";
 
         std::string answer;
-        std::cin >> answer;
-        std::cin.get();
+        getline(std::cin, answer);
 
         if ((unsigned char)std::tolower(answer[0]) == 'n')
             break;
