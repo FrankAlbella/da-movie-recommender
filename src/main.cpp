@@ -689,7 +689,7 @@ finished_loading:
             std::cout << std::endl;
         }
 
-        std::cout << "Would you search another movie? (y/n): ";
+        std::cout << "Would you like to search for another movie? (y/n): ";
 
         std::string answer;
         getline(std::cin, answer);
