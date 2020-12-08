@@ -464,14 +464,14 @@ Movie *findMovie(std::string title, std::string year, std::map<std::string, Movi
                   << "\"" << suggestions[i]->name << "\", " << suggestions[i]->year << std::endl;
 
     int choice = -1;
-    
+
     while (choice < 0 || choice > suggestions.size())
     {
         std::cout << "Pick an option: ";
         std::cin >> choice;
         std::cin.get();
 
-        if(choice < 0 || choice > suggestions.size())
+        if (choice < 0 || choice > suggestions.size())
             std::cout << "Invalid choice, please try again." << std::endl;
     }
 
@@ -576,7 +576,6 @@ int main()
     }
 
 finished_loading:
-<<<<<<< HEAD
     auto stopTime = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stopTime - startTime);
     std::cout << "Time elasped: " << duration.count() << "ms" << std::endl;
@@ -589,7 +588,6 @@ finished_loading:
         std::string answer;
 
         std::cin >> answer;
-        std::cin.get();
 
         if ((unsigned char)std::tolower(answer[0]) == 'y')
         {
@@ -602,11 +600,38 @@ finished_loading:
     {
         std::string title;
         std::string year;
+        std::string algoSelction;
 
         std::cout << "Enter a Movie Name: ";
         getline(std::cin, title);
         std::cout << "Enter the year published (type UNKNOWN if the movie has no known date): ";
         getline(std::cin, year);
+
+        bool selectionSortChosen;
+        bool validAlgoChosen = false;
+
+        std::cout << "Which Sorting algorithm would you like to use: " << std::endl;
+        std::cout << "1) Selection sort " << std::endl;
+        std::cout << "2) Heap sort " << std::endl;
+
+        while (!validAlgoChosen)
+        {
+            std::cout << "Pick an option: ";
+            getline(std::cin, algoSelction);
+
+            if (algoSelction == "1")
+            {
+                selectionSortChosen = true;
+                validAlgoChosen = true;
+            }
+            else if (algoSelction == "2")
+            {
+                selectionSortChosen = false;
+                validAlgoChosen = true;
+            }
+            else
+                std::cout << "Invalid choice, please try again." << std::endl;
+        }
 
         Movie *selectedMovie = findMovie(title, year, moviesByName);
 
@@ -614,42 +639,58 @@ finished_loading:
             continue;
 
         selectedMovie->print();
+        std::cout << std::endl;
 
         scoreMovies(moviesByName, selectedMovie);
 
-        std::cout << "Top 10 Recommendations by selection sort" << std::endl;
+        if (selectionSortChosen)
+        {
+            std::cout << "Top 10 Recommendations: selection sort" << std::endl;
 
-        startTime = std::chrono::high_resolution_clock::now();
+            auto startTime = std::chrono::high_resolution_clock::now();
 
-        auto bsorted = selectionSort(10, moviesByName);
+            auto bsorted = selectionSort(10, moviesByName);
 
-        stopTime = std::chrono::high_resolution_clock::now();
-        duration = std::chrono::duration_cast<std::chrono::milliseconds>(stopTime - startTime);
-        std::cout << "Time elasped: " << duration.count() << "ms" << std::endl;
+            auto stopTime = std::chrono::high_resolution_clock::now();
+            auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stopTime - startTime);
 
-        int bshift = bsorted[0]->movieId == selectedMovie->movieId;
+            int bshift = bsorted[0]->name == selectedMovie->name;
+            for (int i = 0 + bshift; i < 10 + bshift; i++)
+            {
+                std::cout << i << "-------------------------" << std::endl;
+                bsorted[i]->print();
+                std::cout << "\tRecomendation Score: " << bsorted[i]->score << std::endl;
+            }
+            std::cout << std::endl;
+            std::cout << "Time elasped: " << duration.count() << "ms" << std::endl;
+            std::cout << std::endl;
+        }
+        else if (!selectionSortChosen)
+        {
+            std::cout << "Top 10 Recommendations: heapsort sort" << std::endl;
 
-        for (int i = 0 + bshift; i < 10 + bshift; i++)
-            std::cout << bsorted[i]->name << " " << bsorted[i]->score << std::endl;
+            auto startTime = std::chrono::high_resolution_clock::now();
 
-        std::cout << std::endl;
+            auto hsorted = heapSort(10 + 1, moviesByName);
 
-        std::cout << "Top 10 Recommendations by heapsort sort" << std::endl;
+            auto stopTime = std::chrono::high_resolution_clock::now();
+            auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stopTime - startTime);
 
-        startTime = std::chrono::high_resolution_clock::now();
+            int hshift = hsorted[0]->name == selectedMovie->name;
+            for (int i = 0 + hshift; i < 10 + hshift; i++)
+            {
+                std::cout << i << "-------------------------" << std::endl;
+                hsorted[i]->print();
+                std::cout << "\tRecomendation Score: " << hsorted[i]->score << std::endl;
+                std::cout << std::endl;
+            }
 
-        auto hsorted = heapSort(10 + 1, moviesByName);
+            std::cout << std::endl;
+            std::cout << "Time elasped: " << duration.count() << "ms" << std::endl;
+            std::cout << std::endl;
+        }
 
-        stopTime = std::chrono::high_resolution_clock::now();
-        duration = std::chrono::duration_cast<std::chrono::milliseconds>(stopTime - startTime);
-        std::cout << "Time elasped: " << duration.count() << "ms" << std::endl;
-
-        int hshift = hsorted[0]->movieId == selectedMovie->movieId;
-
-        for (int i = 0 + hshift; i < 10 + hshift; i++)
-            std::cout << hsorted[i]->name << " " << hsorted[i]->score << std::endl;
-
-        std::cout << "Would you like search another movie? (y/n): ";
+        std::cout << "Would you search another movie? (y/n): ";
 
         std::string answer;
         std::cin >> answer;
@@ -657,137 +698,7 @@ finished_loading:
 
         if ((unsigned char)std::tolower(answer[0]) == 'n')
             break;
-
-        std::cout << std::endl;
     }
 
     return 0;
-=======
-	auto stopTime = std::chrono::high_resolution_clock::now();
-	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stopTime - startTime);
-	std::cout << "Time elasped: " << duration.count() << "ms" << std::endl;
-
-	if (!masterFileUsed)
-	{
-		std::cout << "A master file can be created for faster loading times" << std::endl;
-		std::cout << "Would you like to create a master file? (y/n): ";
-
-		std::string answer;
-
-		std::cin >> answer;
-
-		if ((unsigned char)std::tolower(answer[0]) == 'y')
-		{
-			std::cout << "Saving to master file..." << std::endl;
-			MoviesToTsv(moviesById);
-		}
-
-	}
-
-	while (true)
-	{
-		std::string title;
-		std::string year;
-		std::string algoSelction;
-
-		std::cout << "Enter a Movie Name: ";
-		getline(std::cin, title);
-		std::cout << "Enter the year published (type UNKNOWN if the movie has no known date): ";
-		getline(std::cin, year);
-
-		bool selectionSortChosen;
-		bool validAlgoChosen = false;
-		while (not validAlgoChosen) {
-			std::cout << "Which Sorting algorithm would you like to use: " << std::endl;
-			std::cout << "1) selection sort " << std::endl;
-			std::cout << "2) heap sort " << std::endl;
-			getline(std::cin, algoSelction);
-
-			if (algoSelction == "1")
-			{
-				selectionSortChosen = true;
-				validAlgoChosen = true;
-			}
-			else if (algoSelction == "2")
-			{
-				selectionSortChosen = false;
-				validAlgoChosen = true;
-			}
-		}
-
-		//Not needed with after search suggestion function
-		//std::string key = title + "_" + year; 
-		//if (moviesByName.count(key) == 0)
-		//{
-		//	std::cout << "Movie not found!" << std::endl;
-		//	return 2;
-		//}
-
-		Movie* selectedMovie = findMovie(title, year, moviesByName);
-
-		selectedMovie->print();
-		std::cout << std::endl;
-
-		std::string imdbId = selectedMovie->movieId;
-
-		scoreMovies(moviesByName, selectedMovie);
-
-		if (selectionSortChosen) 
-		{
-			std::cout << "Top 10 Recommendations: selection sort" << std::endl;
-
-			auto startTime = std::chrono::high_resolution_clock::now();
-
-			auto bsorted = selectionSort(10, moviesByName);
-
-			auto stopTime = std::chrono::high_resolution_clock::now();
-			auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stopTime - startTime);
-
-			int bshift = 0;
-			if (bsorted[0]->name == selectedMovie->name) {
-				bshift = 1;
-			}
-			for (int i = 0 + bshift; i < 10 + bshift; i++)
-			{
-				std::cout << i << "-------------------------" << std::endl;
-				bsorted[i]->print();
-				std::cout << "\tRecomendation Score: " << bsorted[i]->score << std::endl;
-			}
-			std::cout << std::endl;
-			std::cout << "Time elasped: " << duration.count() << "ms" << std::endl;
-			std::cout << std::endl;
-		}
-		else if (!selectionSortChosen)
-		{
-			std::cout << "Top 10 Recommendations: heapsort sort" << std::endl;
-
-			auto startTime = std::chrono::high_resolution_clock::now();
-			
-			auto hsorted = heapSort(10 + 1, moviesByName);
-			
-			auto stopTime = std::chrono::high_resolution_clock::now();
-			auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stopTime - startTime);
-
-			int hshift = 0;
-			if (hsorted[0]->name == selectedMovie->name) {
-				hshift = 1;
-			}
-			for (int i = 0 + hshift; i < 10 + hshift; i++)
-			{
-				std::cout << i << "-------------------------" << std::endl;
-				hsorted[i]->print();
-				std::cout << "\tRecomendation Score: " << hsorted[i]->score << std::endl;
-				std::cout << std::endl;
-			}
-			title = "";
-			year = "";
-
-			std::cout << std::endl;
-			std::cout << "Time elasped: " << duration.count() << "ms" << std::endl;
-			std::cout << std::endl;
-		}
-	}
-
-	return 0;
->>>>>>> e93eebb405009f56a2e8bee7a0b8f82b20917466
 }
